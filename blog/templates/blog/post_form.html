@@ -22,34 +22,29 @@
                     </h2>
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
-                            {{ form.title }}
-                            {% if form.title.errors %}
-                                {% for error in form.title.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
-                            {{ form.category }}
-                            {% if form.category.errors %}
-                                {% for error in form.category.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <label for="{{ form.content.id_for_label }}" class="form-label">{{ form.content.label }}</label>
-                            {{ form.content }}
-                            {% if form.content.errors %}
-                                {% for error in form.content.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <div class="d-grid gap-2">
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <div class="w-100 mb-2">
+                                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                                </div>
+                                <div class="w-100">
+                                    {{ field }}
+                                </div>
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ field.help_text|safe }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">
                                 {% if form.instance.pk %}
                                     Сохранить изменения

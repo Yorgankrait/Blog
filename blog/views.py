@@ -10,8 +10,9 @@ from django.views.generic import (
 )
 from django.contrib.auth.models import User
 from django.db.models import Q
-from .models import Post, Category
-from .forms import PostForm
+from .models import Post, Category, Comment
+from .forms import PostForm, CommentForm
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -60,6 +61,11 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -101,3 +107,43 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+@login_required
+def add_comment(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+    return redirect('blog:post-detail', pk=pk)
+
+@login_required
+def like_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return JsonResponse({
+        'likes': post.total_likes(),
+        'dislikes': post.total_dislikes()
+    })
+
+@login_required
+def dislike_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    else:
+        post.dislikes.add(request.user)
+    return JsonResponse({
+        'likes': post.total_likes(),
+        'dislikes': post.total_dislikes()
+    })

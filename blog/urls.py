@@ -5,6 +5,7 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
+    FavoritePostsView,
 )
 from . import views
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path('post/<int:pk>/comment/', views.add_comment, name='add-comment'),
     path('post/<int:pk>/like/', views.like_post, name='like-post'),
     path('post/<int:pk>/dislike/', views.dislike_post, name='dislike-post'),
+    path('post/<int:pk>/favorite/', views.toggle_favorite, name='toggle-favorite'),
+    path('favorites/', FavoritePostsView.as_view(), name='favorites'),
 ] 

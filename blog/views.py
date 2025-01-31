@@ -56,6 +56,8 @@ class PostListView(ListView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['authors'] = User.objects.filter(post__isnull=False).distinct()
+        if self.request.user.is_authenticated:
+            context['favorite_posts'] = self.request.user.favorite_posts.values_list('id', flat=True)
         return context
 
 class PostDetailView(DetailView):
@@ -147,3 +149,34 @@ def dislike_post(request, pk):
         'likes': post.total_likes(),
         'dislikes': post.total_dislikes()
     })
+
+@login_required
+def toggle_favorite(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.user in post.favorites.all():
+        post.favorites.remove(request.user)
+        is_favorite = False
+    else:
+        post.favorites.add(request.user)
+        is_favorite = True
+    return JsonResponse({
+        'is_favorite': is_favorite,
+        'favorites_count': post.favorites.count()
+    })
+
+class FavoritePostsView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'blog/favorites.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Post.objects.filter(favorites=self.request.user).order_by('-date_posted')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['authors'] = User.objects.filter(post__isnull=False).distinct()
+        if self.request.user.is_authenticated:
+            context['favorite_posts'] = self.request.user.favorite_posts.values_list('id', flat=True)
+        return context

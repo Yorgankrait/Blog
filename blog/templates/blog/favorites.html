@@ -1,6 +1,6 @@
 {% extends "blog/base.html" %}
 
-{% block title %}Главная - Блог{% endblock %}
+{% block title %}Избранные статьи{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -31,35 +31,9 @@
                         </select>
                     </div>
 
-                    <!-- Авторы -->
-                    <div class="mb-3">
-                        <label for="author" class="form-label">Автор</label>
-                        <select class="form-select form-select-sm" id="author" name="author">
-                            <option value="">Все авторы</option>
-                            {% for author in authors %}
-                                <option value="{{ author.username }}"
-                                        {% if request.GET.author == author.username %}selected{% endif %}>
-                                    {{ author.username }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Даты -->
-                    <div class="mb-3">
-                        <label for="date_from" class="form-label">Дата от</label>
-                        <input type="date" class="form-control form-control-sm" id="date_from" name="date_from"
-                               value="{{ request.GET.date_from }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="date_to" class="form-label">Дата до</label>
-                        <input type="date" class="form-control form-control-sm" id="date_to" name="date_to"
-                               value="{{ request.GET.date_to }}">
-                    </div>
-
                     <button type="submit" class="btn btn-primary btn-sm w-100">Применить фильтры</button>
                     {% if request.GET %}
-                        <a href="{% url 'blog:home' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                        <a href="{% url 'blog:favorites' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">
                             Сбросить фильтры
                         </a>
                     {% endif %}
@@ -68,8 +42,9 @@
         </div>
     </div>
 
-    <!-- Список постов -->
+    <!-- Список избранных постов -->
     <div class="col-12 col-md-9">
+        <h1 class="mb-4">Избранные статьи</h1>
         {% for post in posts %}
             <article class="card mb-4 shadow-sm">
                 <div class="card-body">
@@ -100,26 +75,25 @@
                         <span class="text-primary" title="Комментарии">
                             <i class="bi bi-chat-dots"></i> {{ post.comments.count }}
                         </span>
-                        {% if user.is_authenticated %}
-                            <button class="btn btn-sm {% if post.id in favorite_posts %}btn-warning{% else %}btn-outline-warning{% endif %} favorite-btn" 
-                                    data-post-id="{{ post.pk }}" 
-                                    title="{% if post.id in favorite_posts %}Удалить из избранного{% else %}Добавить в избранное{% endif %}">
-                                <i class="bi bi-star-fill"></i>
-                                <span class="favorites-count">{{ post.favorites.count }}</span>
-                            </button>
-                        {% endif %}
+                        <button class="btn btn-sm btn-warning favorite-btn" 
+                                data-post-id="{{ post.pk }}" 
+                                title="Удалить из избранного">
+                            <i class="bi bi-star-fill"></i>
+                            <span class="favorites-count">{{ post.favorites.count }}</span>
+                        </button>
                     </div>
 
                     <a href="{% url 'blog:post-detail' post.pk %}" class="btn btn-primary btn-sm">Читать далее</a>
                 </div>
             </article>
         {% empty %}
-            <div class="alert alert-info">Нет доступных постов.</div>
+            <div class="alert alert-info">У вас пока нет избранных статей.</div>
         {% endfor %}
 
         {% if is_paginated %}
+            <!-- Пагинация (такая же, как на главной странице) -->
             <nav aria-label="Навигация по страницам" class="my-4">
-                <ul class="pagination pagination-sm justify-content-center flex-wrap">
+                <ul class="pagination pagination-sm justify-content-center">
                     {% if page_obj.has_previous %}
                         <li class="page-item">
                             <a class="page-link" href="?page=1">Первая</a>
@@ -155,8 +129,7 @@
     </div>
 </div>
 
-<!-- Добавим JavaScript для обработки избранного -->
-{% if user.is_authenticated %}
+<!-- JavaScript для обработки избранного -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.favorite-btn').forEach(button => {
@@ -171,19 +144,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const data = await response.json();
                 
-                // Обновляем внешний вид кнопки
-                if (data.is_favorite) {
-                    this.classList.remove('btn-outline-warning');
-                    this.classList.add('btn-warning');
-                    this.title = 'Удалить из избранного';
-                } else {
-                    this.classList.remove('btn-warning');
-                    this.classList.add('btn-outline-warning');
-                    this.title = 'Добавить в избранное';
+                // После успешного удаления из избранного, удаляем карточку статьи
+                if (!data.is_favorite) {
+                    const article = this.closest('article');
+                    article.remove();
+                    
+                    // Если это была последняя статья, показываем сообщение
+                    const remainingArticles = document.querySelectorAll('article').length;
+                    if (remainingArticles === 0) {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'alert alert-info';
+                        messageDiv.textContent = 'У вас пока нет избранных статей.';
+                        document.querySelector('.col-md-9').appendChild(messageDiv);
+                    }
                 }
-                
-                // Обновляем счетчик
-                this.querySelector('.favorites-count').textContent = data.favorites_count;
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -191,5 +165,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endif %}
 {% endblock %} 

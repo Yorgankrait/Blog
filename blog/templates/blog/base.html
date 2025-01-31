@@ -226,6 +226,12 @@
                             <a class="nav-link" href="{% url 'blog:post-create' %}">Новая статья</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-warning" href="{% url 'blog:favorites' %}" title="Избранные статьи">
+                                <i class="bi bi-star-fill"></i>
+                                <span class="d-lg-none ms-2">Избранное</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
                         </li>
                     {% else %}

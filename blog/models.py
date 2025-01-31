@@ -24,6 +24,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='post_images', verbose_name='Изображение', blank=True, null=True)
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
+    favorites = models.ManyToManyField(User, related_name='favorite_posts', blank=True)
     
     class Meta:
         verbose_name = 'Пост'
@@ -56,6 +57,9 @@ class Post(models.Model):
     
     def total_dislikes(self):
         return self.dislikes.count()
+
+    def is_favorited_by(self, user):
+        return user in self.favorites.all()
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')

@@ -1,0 +1,127 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Главная - Блог{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Сайдбар с фильтрами -->
+    <div class="col-12 col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Фильтры</h5>
+                <form method="get" class="mb-3">
+                    <!-- Поиск -->
+                    <div class="mb-3">
+                        <label for="search" class="form-label">Поиск</label>
+                        <input type="text" class="form-control form-control-sm" id="search" name="search" 
+                               value="{{ request.GET.search }}">
+                    </div>
+
+                    <!-- Категории -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Категория</label>
+                        <select class="form-select form-select-sm" id="category" name="category">
+                            <option value="">Все категории</option>
+                            {% for category in categories %}
+                                <option value="{{ category.slug }}" 
+                                        {% if request.GET.category == category.slug %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Авторы -->
+                    <div class="mb-3">
+                        <label for="author" class="form-label">Автор</label>
+                        <select class="form-select form-select-sm" id="author" name="author">
+                            <option value="">Все авторы</option>
+                            {% for author in authors %}
+                                <option value="{{ author.username }}"
+                                        {% if request.GET.author == author.username %}selected{% endif %}>
+                                    {{ author.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Даты -->
+                    <div class="mb-3">
+                        <label for="date_from" class="form-label">Дата от</label>
+                        <input type="date" class="form-control form-control-sm" id="date_from" name="date_from"
+                               value="{{ request.GET.date_from }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="date_to" class="form-label">Дата до</label>
+                        <input type="date" class="form-control form-control-sm" id="date_to" name="date_to"
+                               value="{{ request.GET.date_to }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm w-100">Применить фильтры</button>
+                    {% if request.GET %}
+                        <a href="{% url 'blog:home' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                            Сбросить фильтры
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список постов -->
+    <div class="col-12 col-md-9">
+        {% for post in posts %}
+            <article class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title h4">{{ post.title }}</h2>
+                    <p class="text-muted small">
+                        Категория: {{ post.category.name }} | 
+                        Автор: {{ post.author }} | 
+                        {{ post.date_posted|date:"d.m.Y" }}
+                    </p>
+                    <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                    <a href="{% url 'blog:post-detail' post.pk %}" class="btn btn-primary btn-sm">Читать далее</a>
+                </div>
+            </article>
+        {% empty %}
+            <div class="alert alert-info">Нет доступных постов.</div>
+        {% endfor %}
+
+        {% if is_paginated %}
+            <nav aria-label="Навигация по страницам" class="my-4">
+                <ul class="pagination pagination-sm justify-content-center flex-wrap">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">Первая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

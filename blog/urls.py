@@ -22,4 +22,5 @@ urlpatterns = [
     path('post/<int:pk>/dislike/', views.dislike_post, name='dislike-post'),
     path('post/<int:pk>/favorite/', views.toggle_favorite, name='toggle-favorite'),
     path('favorites/', FavoritePostsView.as_view(), name='favorites'),
+    path('tutorial/', views.tutorial_view, name='tutorial'),
 ] 

@@ -1,0 +1,1357 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <h1 class="mb-5 text-center">Подробный учебник по Django на примере блога</h1>
+
+    <div class="row">
+        <!-- Навигация -->
+        <div class="col-md-3 mb-4">
+            <div class="list-group tutorial-nav" id="tutorial-nav">
+                <a class="list-group-item list-group-item-action active" href="#intro">1. Введение</a>
+                <a class="list-group-item list-group-item-action" href="#setup">2. Установка и настройка</a>
+                <a class="list-group-item list-group-item-action" href="#structure">3. Структура проекта</a>
+                <a class="list-group-item list-group-item-action" href="#models">4. Модели (База данных)</a>
+                <a class="list-group-item list-group-item-action" href="#views">5. Представления (Views)</a>
+                <a class="list-group-item list-group-item-action" href="#urls">6. URL-маршруты</a>
+                <a class="list-group-item list-group-item-action" href="#forms">7. Формы</a>
+                <a class="list-group-item list-group-item-action" href="#templates">8. Шаблоны</a>
+                <a class="list-group-item list-group-item-action" href="#static">9. Статические файлы</a>
+                <a class="list-group-item list-group-item-action" href="#auth">10. Аутентификация</a>
+                <a class="list-group-item list-group-item-action" href="#admin">11. Админ-панель</a>
+                <a class="list-group-item list-group-item-action" href="#deploy">12. Развертывание</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <!-- 1. Введение -->
+            <section id="intro" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">1. Введение в Django</h2>
+                        <p>Django - это мощный веб-фреймворк для Python. Представьте, что вы строите дом:</p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-database"></i> Models (Модели)</h5>
+                                        <p>Фундамент дома - хранят данные в базе данных</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-code"></i> Views (Представления)</h5>
+                                        <p>Внутренняя планировка - обрабатывают логику</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-paint-brush"></i> Templates (Шаблоны)</h5>
+                                        <p>Внешний вид - то, что видят пользователи</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по введению:</h5>
+                            <form id="introQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Что такое Django?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="i1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Язык программирования</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="i1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Веб-фреймворк для Python</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="i1" value="3" class="form-check-input">
+                                        <label class="form-check-label">База данных</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. За что отвечают модели в Django?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="i2" value="1" class="form-check-input">
+                                        <label class="form-check-label">За внешний вид сайта</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="i2" value="2" class="form-check-input">
+                                        <label class="form-check-label">За обработку запросов</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="i2" value="3" class="form-check-input">
+                                        <label class="form-check-label">За работу с базой данных</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Установка и настройка -->
+            <section id="setup" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">2. Установка и настройка</h2>
+                        
+                        <h4>2.1. Создание виртуального окружения</h4>
+                        <pre class="bg-light p-3 rounded">
+# Создаем виртуальное окружение
+python -m venv venv
+
+# Активируем его
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate</pre>
+
+                        <h4 class="mt-4">2.2. Установка Django</h4>
+                        <pre class="bg-light p-3 rounded">
+# Устанавливаем Django
+pip install django
+
+# Создаем проект
+django-admin startproject blog_project
+
+# Создаем приложения
+python manage.py startapp blog
+python manage.py startapp users</pre>
+
+                        <h4 class="mt-4">2.3. Настройка settings.py</h4>
+                        <pre class="bg-light p-3 rounded">
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog.apps.BlogConfig',  # Наше приложение блога
+    'users.apps.UsersConfig',  # Приложение пользователей
+]
+
+# Настройки локализации
+LANGUAGE_CODE = 'ru-ru'
+TIME_ZONE = 'Europe/Moscow'
+
+# Настройки медиа-файлов
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'</pre>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по установке:</h5>
+                            <form id="setupQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Для чего нужно виртуальное окружение?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="s1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для изоляции зависимостей проекта</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="s1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для ускорения работы сайта</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="s1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для работы с базой данных</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Какая команда создает новое Django-приложение?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="s2" value="1" class="form-check-input">
+                                        <label class="form-check-label">django-admin startproject</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="s2" value="2" class="form-check-input">
+                                        <label class="form-check-label">python manage.py startapp</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="s2" value="3" class="form-check-input">
+                                        <label class="form-check-label">python manage.py runserver</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Структура проекта -->
+            <section id="structure" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">3. Структура проекта</h2>
+                        <pre class="bg-light p-3 rounded">
+blog_project/              # Основной проект
+├── blog/                 # Приложение блога
+│   ├── migrations/      # Миграции базы данных
+│   ├── static/         # Статические файлы
+│   ├── templates/      # HTML шаблоны
+│   ├── admin.py       # Настройки админки
+│   ├── apps.py        # Конфигурация приложения
+│   ├── forms.py       # Формы
+│   ├── models.py      # Модели данных
+│   ├── urls.py        # URL маршруты
+│   └── views.py       # Представления
+├── users/              # Приложение пользователей
+│   ├── templates/     # Шаблоны пользователей
+│   ├── forms.py       # Формы пользователей
+│   └── views.py       # Представления пользователей
+├── media/             # Загруженные файлы
+├── static/            # Общие статические файлы
+└── manage.py          # Утилита управления</pre>
+                        
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по структуре проекта:</h5>
+                            <form id="structureQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Где хранятся модели в Django-приложении?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="st1" value="1" class="form-check-input">
+                                        <label class="form-check-label">views.py</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="st1" value="2" class="form-check-input">
+                                        <label class="form-check-label">models.py</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="st1" value="3" class="form-check-input">
+                                        <label class="form-check-label">urls.py</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Для чего нужна папка migrations?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="st2" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для хранения статических файлов</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="st2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для хранения изменений базы данных</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="st2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для хранения шаблонов</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Модели -->
+            <section id="models" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">4. Модели (База данных)</h2>
+                        
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="fas fa-lightbulb"></i> Что такое модели?</h5>
+                            <p>Модели в Django - это классы Python, которые представляют таблицы в базе данных. Каждая модель = одна таблица. Например:</p>
+                            <ul>
+                                <li>Модель Post = таблица с постами блога</li>
+                                <li>Модель User = таблица с пользователями</li>
+                                <li>Модель Comment = таблица с комментариями</li>
+                            </ul>
+                            <p>Когда вы создаете новый пост через форму на сайте, Django создает новую запись в таблице Post.</p>
+                        </div>
+
+                        <h4>4.1. Модель Post (Пост блога)</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.db import models
+from django.contrib.auth.models import User
+
+class Post(models.Model):
+    # Заголовок поста (например: "Мой первый пост")
+    title = models.CharField(max_length=200)
+    
+    # Содержание поста (сам текст)
+    content = models.TextField()
+    
+    # Дата создания (добавляется автоматически)
+    date_posted = models.DateTimeField(auto_now_add=True)
+    
+    # Автор поста (связь с моделью User)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    # Изображение к посту (необязательное)
+    image = models.ImageField(upload_to='post_images/', blank=True)
+    
+    # Лайки (многие пользователи могут лайкать много постов)
+    likes = models.ManyToManyField(User, related_name='post_likes')</pre>
+
+                        <div class="alert alert-success mt-3">
+                            <h5><i class="fas fa-info-circle"></i> Как это работает?</h5>
+                            <p>Давайте разберем на примере создания нового поста:</p>
+                            <ol>
+                                <li>Пользователь заполняет форму на сайте (заголовок, текст, картинка)</li>
+                                <li>Django создает новый объект модели Post</li>
+                                <li>Заполняет его данными из формы</li>
+                                <li>Автоматически добавляет дату создания</li>
+                                <li>Сохраняет картинку в папку post_images</li>
+                                <li>Записывает всё в базу данных</li>
+                            </ol>
+                        </div>
+
+                        <h4 class="mt-4">4.2. Связи между моделями</h4>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5>ForeignKey (Один ко многим)</h5>
+                                        <p>Один пользователь может создать много постов, но у поста только один автор</p>
+                                        <code>author = models.ForeignKey(User, ...)</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5>ManyToMany (Многие ко многим)</h5>
+                                        <p>Один пользователь может лайкать много постов, и пост может иметь много лайков</p>
+                                        <code>likes = models.ManyToManyField(User, ...)</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5>OneToOne (Один к одному)</h5>
+                                        <p>Например, один пользователь имеет один профиль</p>
+                                        <code>profile = models.OneToOneField(User, ...)</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4>4.3. Миграции</h4>
+                        <pre class="bg-light p-3 rounded">
+# Создать миграции (план изменений базы данных)
+python manage.py makemigrations
+
+# Применить миграции (внести изменения в базу)
+python manage.py migrate</pre>
+
+                        <div class="alert alert-warning mt-3">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Важно помнить:</h5>
+                            <ul>
+                                <li>После изменения моделей всегда создавайте миграции</li>
+                                <li>Проверяйте миграции перед применением</li>
+                                <li>Делайте резервные копии базы данных</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-tasks"></i> Практические задания:</h5>
+                            <ol>
+                                <li>Создайте модель Category для категорий блога со следующими полями:
+                                    <ul>
+                                        <li>name (название категории)</li>
+                                        <li>slug (URL-friendly название)</li>
+                                        <li>description (описание)</li>
+                                    </ul>
+                                </li>
+                                <li>Добавьте поле category в модель Post (связь ForeignKey)</li>
+                                <li>Создайте модель Comment для комментариев с полями:
+                                    <ul>
+                                        <li>post (связь с Post)</li>
+                                        <li>author (связь с User)</li>
+                                        <li>content (текст комментария)</li>
+                                        <li>created_at (дата создания)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по моделям:</h5>
+                            <form id="modelsQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Какой тип поля нужно использовать для хранения длинного текста?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="q1" value="1" class="form-check-input">
+                                        <label class="form-check-label">CharField</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q1" value="2" class="form-check-input">
+                                        <label class="form-check-label">TextField</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q1" value="3" class="form-check-input">
+                                        <label class="form-check-label">StringField</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p>2. Какой тип связи нужно использовать, если у поста может быть много комментариев?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="q2" value="1" class="form-check-input">
+                                        <label class="form-check-label">OneToOneField</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q2" value="2" class="form-check-input">
+                                        <label class="form-check-label">ManyToManyField</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q2" value="3" class="form-check-input">
+                                        <label class="form-check-label">ForeignKey</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>3. Что делает параметр on_delete=models.CASCADE?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="q3" value="1" class="form-check-input">
+                                        <label class="form-check-label">Удаляет все связанные объекты при удалении основного</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q3" value="2" class="form-check-input">
+                                        <label class="form-check-label">Запрещает удаление, если есть связанные объекты</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q3" value="3" class="form-check-input">
+                                        <label class="form-check-label">Устанавливает NULL для связанных объектов</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>4. Для чего используется auto_now_add=True?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="q4" value="1" class="form-check-input">
+                                        <label class="form-check-label">Автоматически обновляет дату при каждом сохранении</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q4" value="2" class="form-check-input">
+                                        <label class="form-check-label">Устанавливает текущую дату только при создании</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="q4" value="3" class="form-check-input">
+                                        <label class="form-check-label">Позволяет вручную задавать дату</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Представления -->
+            <section id="views" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">5. Представления (Views)</h2>
+                        
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="fas fa-lightbulb"></i> Что такое представления?</h5>
+                            <p>Представления (views) - это функции или классы Python, которые:</p>
+                            <ul>
+                                <li>Получают запрос от пользователя (например, клик по ссылке)</li>
+                                <li>Обрабатывают данные (достают посты из базы данных)</li>
+                                <li>Возвращают ответ (показывают страницу с постами)</li>
+                            </ul>
+                            <p>Это как официант в ресторане: принимает заказ, передает на кухню, приносит готовое блюдо.</p>
+                        </div>
+
+                        <h4>5.1. Функциональные представления</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.shortcuts import render, get_object_or_404
+
+def post_detail(request, pk):
+    # Находим пост по ID (pk) или показываем 404 ошибку
+    post = get_object_or_404(Post, pk=pk)
+    
+    # Получаем все комментарии к посту
+    comments = post.comments.all()
+    
+    # Собираем данные для шаблона
+    context = {
+        'post': post,
+        'comments': comments,
+        'total_likes': post.total_likes()
+    }
+    
+    # Показываем шаблон с данными
+    return render(request, 'blog/post_detail.html', context)</pre>
+
+                        <div class="alert alert-success mt-3">
+                            <h5><i class="fas fa-info-circle"></i> Как это работает?</h5>
+                            <p>Пример: когда пользователь открывает страницу поста</p>
+                            <ol>
+                                <li>Пользователь кликает на заголовок поста</li>
+                                <li>Django находит нужный URL и вызывает post_detail</li>
+                                <li>Функция получает ID поста из URL</li>
+                                <li>Находит пост в базе данных</li>
+                                <li>Собирает все нужные данные (комментарии, лайки)</li>
+                                <li>Передает данные в шаблон</li>
+                                <li>Показывает готовую страницу пользователю</li>
+                            </ol>
+                        </div>
+
+                        <h4 class="mt-4">5.2. Классы-представления</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.views.generic import ListView
+
+class PostListView(ListView):
+    # Какую модель использовать
+    model = Post
+    
+    # Какой шаблон показывать
+    template_name = 'blog/home.html'
+    
+    # Как называется список постов в шаблоне
+    context_object_name = 'posts'
+    
+    # Сортировка: сначала новые посты
+    ordering = ['-date_posted']
+    
+    # Сколько постов на странице
+    paginate_by = 5
+    
+    def get_queryset(self):
+        # Получаем все посты
+        posts = Post.objects.all()
+        
+        # Фильтруем по поиску
+        search = self.request.GET.get('search')
+        if search:
+            posts = posts.filter(title__icontains=search)
+            
+        return posts</pre>
+
+                        <div class="alert alert-info mt-3">
+                            <h5>Дополнительные возможности:</h5>
+                            <ul>
+                                <li>Поиск по заголовкам</li>
+                                <li>Фильтрация по категориям</li>
+                                <li>Сортировка по дате</li>
+                                <li>Пагинация (разделение на страницы)</li>
+                                <li>Кеширование для быстрой работы</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-tasks"></i> Практические задания по представлениям:</h5>
+                            <ol>
+                                <li>Создайте представление для отображения постов по категории:
+                                    <pre class="bg-light p-3 rounded">
+class CategoryPostsView(ListView):
+    model = Post
+    template_name = 'blog/category_posts.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        return Post.objects.filter(category=category)</pre>
+                                </li>
+                                <li>Добавьте функцию для поиска постов:
+                                    <pre class="bg-light p-3 rounded">
+def search_posts(request):
+    query = request.GET.get('q')
+    posts = Post.objects.filter(
+        Q(title__icontains=query) |
+        Q(content__icontains=query)
+    )
+    return render(request, 'blog/search.html', {'posts': posts})</pre>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по представлениям:</h5>
+                            <form id="viewsQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Что делает метод get_queryset в ListView?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="v1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Создает новую запись в базе данных</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Определяет, какие объекты показывать в списке</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Отображает шаблон</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Для чего используется LoginRequiredMixin?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="v2" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для создания формы входа</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для ограничения доступа неавторизованным пользователям</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для выхода из системы</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>3. Что такое context в представлении?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="v3" value="1" class="form-check-input">
+                                        <label class="form-check-label">Данные для передачи в шаблон</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v3" value="2" class="form-check-input">
+                                        <label class="form-check-label">Настройки базы данных</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="v3" value="3" class="form-check-input">
+                                        <label class="form-check-label">URL-адреса</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. URL-маршруты -->
+            <section id="urls" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">6. URL-маршруты</h2>
+
+                        <h4>6.1. Главный urls.py</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('blog.urls')),
+    path('users/', include('users.urls')),
+]</pre>
+
+                        <h4 class="mt-4">6.2. URLs приложения</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.urls import path
+from . import views
+
+app_name = 'blog'
+
+urlpatterns = [
+    path('', views.PostListView.as_view(), name='home'),
+    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+    path('post/new/', views.PostCreateView.as_view(), name='post-create'),
+]</pre>
+
+                        <div class="alert alert-warning mt-3">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Важные моменты:</h5>
+                            <ul>
+                                <li>URL-паттерны обрабатываются сверху вниз</li>
+                                <li>Используйте именованные URL для гибкости</li>
+                                <li>app_name помогает избежать конфликтов имен</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Формы -->
+            <section id="forms" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">7. Формы</h2>
+
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="fas fa-lightbulb"></i> Что такое формы?</h5>
+                            <p>Формы - это способ получить данные от пользователя. Например:</p>
+                            <ul>
+                                <li>Форма регистрации (логин, пароль, email)</li>
+                                <li>Форма создания поста (заголовок, текст, картинка)</li>
+                                <li>Форма комментария (текст комментария)</li>
+                            </ul>
+                            <p>Django автоматически проверяет данные и защищает от взлома!</p>
+                        </div>
+
+                        <h4>7.1. Создание формы для постов</h4>
+                        <pre class="bg-light p-3 rounded">
+from django import forms
+from .models import Post
+
+class PostForm(forms.ModelForm):
+    # Указываем модель и поля
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'image']
+        
+    # Настраиваем внешний вид полей
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Стилизуем поле заголовка
+        self.fields['title'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите заголовок'
+        })
+        
+        # Стилизуем поле текста
+        self.fields['content'].widget.attrs.update({
+            'class': 'form-control',
+            'rows': 5,
+            'placeholder': 'Напишите ваш пост здесь'
+        })</pre>
+
+                        <div class="alert alert-success mt-3">
+                            <h5><i class="fas fa-info-circle"></i> Как это работает?</h5>
+                            <p>Процесс создания нового поста:</p>
+                            <ol>
+                                <li>Пользователь открывает форму создания поста</li>
+                                <li>Заполняет поля (заголовок, текст, картинка)</li>
+                                <li>Нажимает "Опубликовать"</li>
+                                <li>Django проверяет данные:</li>
+                                <ul>
+                                    <li>Заполнены ли обязательные поля?</li>
+                                    <li>Правильный ли формат картинки?</li>
+                                    <li>Не слишком ли длинный заголовок?</li>
+                                </ul>
+                                <li>Если всё хорошо - создает новый пост</li>
+                                <li>Если есть ошибки - показывает их пользователю</li>
+                            </ol>
+                        </div>
+
+                        <h4 class="mt-4">7.2. Валидация данных</h4>
+                        <pre class="bg-light p-3 rounded">
+def clean_title(self):
+    title = self.cleaned_data.get('title')
+    
+    # Проверяем длину заголовка
+    if len(title) < 5:
+        raise forms.ValidationError(
+            'Заголовок слишком короткий. Минимум 5 символов.'
+        )
+    
+    # Проверяем, нет ли такого заголовка
+    if Post.objects.filter(title=title).exists():
+        raise forms.ValidationError(
+            'Пост с таким заголовком уже существует!'
+        )
+    
+    return title</pre>
+
+                        <div class="alert alert-warning mt-3">
+                            <h5><i class="fas fa-shield-alt"></i> Безопасность форм:</h5>
+                            <ul>
+                                <li>CSRF защита от подделки запросов</li>
+                                <li>Проверка размера файлов</li>
+                                <li>Защита от SQL-инъекций</li>
+                                <li>Фильтрация HTML-тегов</li>
+                                <li>Ограничение частоты отправки форм</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-tasks"></i> Практические задания по формам:</h5>
+                            <ol>
+                                <li>Создайте форму для комментариев:
+                                    <pre class="bg-light p-3 rounded">
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Напишите комментарий...',
+            'rows': 3
+        })</pre>
+                                </li>
+                                <li>Добавьте валидацию для запрещенных слов:
+                                    <pre class="bg-light p-3 rounded">
+def clean_content(self):
+    content = self.cleaned_data.get('content')
+    bad_words = ['спам', 'реклама']
+    
+    for word in bad_words:
+        if word in content.lower():
+            raise forms.ValidationError(
+                'Комментарий содержит запрещенные слова'
+            )
+    
+    return content</pre>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по формам:</h5>
+                            <form id="formsQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Для чего используется clean_field в формах Django?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="f1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для очистки базы данных</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для валидации данных поля</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для удаления поля из формы</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Что такое ModelForm?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="f2" value="1" class="form-check-input">
+                                        <label class="form-check-label">Форма, автоматически созданная на основе модели</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Форма для создания новых моделей</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Форма для удаления моделей</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>3. Как защитить форму от CSRF-атак?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="f3" value="1" class="form-check-input">
+                                        <label class="form-check-label">Добавить {% verbatim %}{% csrf_token %}{% endverbatim %} в шаблон</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f3" value="2" class="form-check-input">
+                                        <label class="form-check-label">Использовать HTTPS</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="f3" value="3" class="form-check-input">
+                                        <label class="form-check-label">Отключить POST-запросы</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Шаблоны -->
+            <section id="templates" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">8. Шаблоны</h2>
+
+                        <h4>8.1. Базовый шаблон</h4>
+                        <pre class="bg-light p-3 rounded">
+{% verbatim %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% include 'blog/navbar.html' %}
+    
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
+{% endverbatim %}</pre>
+
+                        <h4 class="mt-4">8.2. Шаблонные теги</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Тег</th>
+                                        <th>Описание</th>
+                                        <th>Пример</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>{% verbatim %}{% if %}{% endverbatim %}</code></td>
+                                        <td>Условие</td>
+                                        <td><code>{% verbatim %}{% if user.is_authenticated %}{% endverbatim %}</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>{% verbatim %}{% for %}{% endverbatim %}</code></td>
+                                        <td>Цикл</td>
+                                        <td><code>{% verbatim %}{% for post in posts %}{% endverbatim %}</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>{% verbatim %}{% url %}{% endverbatim %}</code></td>
+                                        <td>URL по имени</td>
+                                        <td><code>{% verbatim %}{% url 'blog:post-detail' post.pk %}{% endverbatim %}</code></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. Статические файлы -->
+            <section id="static" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">9. Статические файлы</h2>
+
+                        <h4>9.1. Настройка статических файлов</h4>
+                        <pre class="bg-light p-3 rounded">
+# settings.py
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [BASE_DIR / 'blog/static']</pre>
+
+                        <h4 class="mt-4">9.2. Использование в шаблонах</h4>
+                        <pre class="bg-light p-3 rounded">
+{% verbatim %}
+{% load static %}
+<link href="{% static 'blog/style.css' %}" rel="stylesheet">
+<img src="{% static 'blog/logo.png' %}" alt="Logo">
+{% endverbatim %}</pre>
+
+                        <div class="alert alert-info mt-3">
+                            <h5>Типы статических файлов:</h5>
+                            <ul>
+                                <li>CSS стили</li>
+                                <li>JavaScript файлы</li>
+                                <li>Изображения</li>
+                                <li>Шрифты</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по статическим файлам:</h5>
+                            <form id="staticQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Какой тег используется для подключения статических файлов?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf1" value="1" class="form-check-input">
+                                        <label class="form-check-label">{% verbatim %}{% include %}{% endverbatim %}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf1" value="2" class="form-check-input">
+                                        <label class="form-check-label">{% verbatim %}{% static %}{% endverbatim %}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf1" value="3" class="form-check-input">
+                                        <label class="form-check-label">{% verbatim %}{% url %}{% endverbatim %}</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Что такое STATIC_ROOT?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf2" value="1" class="form-check-input">
+                                        <label class="form-check-label">URL для доступа к статическим файлам</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Путь для сбора всех статических файлов</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="sf2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Список директорий со статическими файлами</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. Аутентификация -->
+            <section id="auth" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">10. Аутентификация</h2>
+
+                        <h4>10.1. Регистрация пользователей</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.contrib.auth.forms import UserCreationForm
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'users/register.html', {'form': form})</pre>
+
+                        <h4 class="mt-4">10.2. Декораторы и миксины</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+@login_required
+def profile(request):
+    return render(request, 'users/profile.html')
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content']</pre>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по аутентификации:</h5>
+                            <form id="authQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Для чего используется декоратор @login_required?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="a1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для создания формы входа</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="a1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для ограничения доступа неавторизованным пользователям</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="a1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для регистрации новых пользователей</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Какая форма используется для регистрации пользователей?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="a2" value="1" class="form-check-input">
+                                        <label class="form-check-label">AuthenticationForm</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="a2" value="2" class="form-check-input">
+                                        <label class="form-check-label">UserCreationForm</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="a2" value="3" class="form-check-input">
+                                        <label class="form-check-label">UserChangeForm</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. Админ-панель -->
+            <section id="admin" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">11. Админ-панель</h2>
+
+                        <h4>11.1. Регистрация моделей</h4>
+                        <pre class="bg-light p-3 rounded">
+from django.contrib import admin
+from .models import Post
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'author', 'date_posted']
+    list_filter = ['date_posted', 'author']
+    search_fields = ['title', 'content']</pre>
+
+                        <h4 class="mt-4">11.2. Настройка отображения</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Опция</th>
+                                        <th>Описание</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>list_display</code></td>
+                                        <td>Поля для отображения в списке</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>list_filter</code></td>
+                                        <td>Фильтры справа</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>search_fields</code></td>
+                                        <td>Поля для поиска</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по админ-панели:</h5>
+                            <form id="adminQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Как зарегистрировать модель в админ-панели?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Добавить в INSTALLED_APPS</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Использовать декоратор @admin.register</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Создать новый URL-маршрут</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Для чего используется list_display?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad2" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для отображения полей в списке объектов</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для создания новых записей</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="ad2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для настройки фильтров</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. Развертывание -->
+            <section id="deploy" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">12. Развертывание</h2>
+
+                        <h4>12.1. Подготовка к развертыванию</h4>
+                        <pre class="bg-light p-3 rounded">
+# settings.py
+DEBUG = False
+ALLOWED_HOSTS = ['yourdomain.com']
+
+# Создание requirements.txt
+pip freeze > requirements.txt</pre>
+
+                        <h4 class="mt-4">12.2. Настройка WSGI/ASGI</h4>
+                        <pre class="bg-light p-3 rounded">
+# wsgi.py
+import os
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_project.settings')
+application = get_wsgi_application()</pre>
+
+                        <div class="alert alert-warning mt-3">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Важно при развертывании:</h5>
+                            <ul>
+                                <li>Скрыть SECRET_KEY</li>
+                                <li>Настроить базу данных</li>
+                                <li>Настроить статические файлы</li>
+                                <li>Настроить HTTPS</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-question-circle"></i> Тесты по развертыванию:</h5>
+                            <form id="deployQuiz" class="quiz-form">
+                                <div class="mb-3">
+                                    <p>1. Что нужно изменить при развертывании?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="d1" value="1" class="form-check-input">
+                                        <label class="form-check-label">Установить DEBUG = True</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="d1" value="2" class="form-check-input">
+                                        <label class="form-check-label">Установить DEBUG = False</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="d1" value="3" class="form-check-input">
+                                        <label class="form-check-label">Удалить все миграции</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <p>2. Для чего нужен файл requirements.txt?</p>
+                                    <div class="form-check">
+                                        <input type="radio" name="d2" value="1" class="form-check-input">
+                                        <label class="form-check-label">Для списка URL-адресов</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="d2" value="2" class="form-check-input">
+                                        <label class="form-check-label">Для списка зависимостей проекта</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="d2" value="3" class="form-check-input">
+                                        <label class="form-check-label">Для настроек базы данных</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Дополнительные стили -->
+<style>
+    .tutorial-nav {
+        position: sticky;
+        top: 20px;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    section {
+        scroll-margin-top: 80px;
+    }
+</style>
+
+<!-- JavaScript для плавной прокрутки -->
+<script>
+document.querySelectorAll('#tutorial-nav a').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelectorAll('#tutorial-nav a').forEach(a => {
+            a.classList.remove('active');
+        });
+        
+        this.classList.add('active');
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Подсветка текущего раздела при прокрутке
+window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('section');
+    const navItems = document.querySelectorAll('#tutorial-nav a');
+    
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 100) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href').slice(1) === current) {
+            item.classList.add('active');
+        }
+    });
+});
+</script>
+
+<!-- JavaScript для тестов -->
+<script>
+// Функция проверки тестов с подробными объяснениями
+function checkQuiz(formId, answers) {
+    const form = document.getElementById(formId);
+    let score = 0;
+    let total = Object.keys(answers).length;
+    let explanations = [];
+    
+    for (let question in answers) {
+        const selected = form.querySelector(`input[name="${question}"]:checked`);
+        if (selected && selected.value === answers[question].correct) {
+            score++;
+            explanations.push(`✅ ${answers[question].explanation}`);
+        } else {
+            explanations.push(`❌ ${answers[question].explanation}`);
+        }
+    }
+    
+    const result = `
+    Ваш результат: ${score} из ${total} правильных ответов\n\n
+    Объяснения:\n${explanations.join('\n')}
+    `;
+    
+    alert(result);
+}
+
+// Добавляем кнопки проверки для каждого теста
+document.querySelectorAll('form[id$="Quiz"]').forEach(form => {
+    const button = document.createElement('button');
+    button.className = 'btn btn-primary mt-3';
+    button.textContent = 'Проверить ответы';
+    button.type = 'button';
+    
+    button.addEventListener('click', () => {
+        const answers = {
+            'introQuiz': {
+                'i1': { correct: '2', explanation: 'Django - это веб-фреймворк для Python, который упрощает создание веб-приложений' },
+                'i2': { correct: '3', explanation: 'Модели отвечают за работу с базой данных и хранение данных' }
+            },
+            'setupQuiz': {
+                's1': { correct: '1', explanation: 'Виртуальное окружение изолирует зависимости разных проектов друг от друга' },
+                's2': { correct: '2', explanation: 'python manage.py startapp создает новое приложение в проекте' }
+            },
+            'structureQuiz': {
+                'st1': { correct: '2', explanation: 'Модели хранятся в файле models.py каждого приложения' },
+                'st2': { correct: '2', explanation: 'В папке migrations хранятся файлы миграций для изменения структуры базы данных' }
+            },
+            'staticQuiz': {
+                'sf1': { correct: '2', explanation: 'Тег {% verbatim %}{% static %}{% endverbatim %} используется для подключения статических файлов' },
+                'sf2': { correct: '2', explanation: 'STATIC_ROOT - это путь, куда Django собирает все статические файлы при деплое' }
+            },
+            'authQuiz': {
+                'a1': { correct: '2', explanation: '@login_required защищает view от доступа неавторизованных пользователей' },
+                'a2': { correct: '2', explanation: 'UserCreationForm - встроенная форма Django для регистрации новых пользователей' }
+            },
+            'adminQuiz': {
+                'ad1': { correct: '2', explanation: '@admin.register используется для регистрации модели в админ-панели' },
+                'ad2': { correct: '1', explanation: 'list_display определяет, какие поля модели отображаются в списке объектов' }
+            },
+            'deployQuiz': {
+                'd1': { correct: '2', explanation: 'На продакшене DEBUG должен быть False для безопасности' },
+                'd2': { correct: '2', explanation: 'requirements.txt содержит список всех пакетов Python, необходимых для работы проекта' }
+            },
+            'modelsQuiz': {
+                'q1': { correct: '2', explanation: 'TextField используется для длинных текстов без ограничения длины' },
+                'q2': { correct: '3', explanation: 'ForeignKey создает связь "один ко многим" - один пост может иметь много комментариев' },
+                'q3': { correct: '1', explanation: 'CASCADE удаляет все связанные объекты при удалении основного объекта' },
+                'q4': { correct: '2', explanation: 'auto_now_add=True устанавливает текущую дату только при первом создании объекта' }
+            },
+            'viewsQuiz': {
+                'v1': { correct: '2', explanation: 'get_queryset определяет, какие объекты будут отображаться в списке' },
+                'v2': { correct: '2', explanation: 'LoginRequiredMixin защищает представление от доступа неавторизованных пользователей' },
+                'v3': { correct: '1', explanation: 'context - это словарь с данными, которые передаются в шаблон для отображения' }
+            },
+            'formsQuiz': {
+                'f1': { correct: '2', explanation: 'clean_field используется для дополнительной валидации данных конкретного поля' },
+                'f2': { correct: '1', explanation: 'ModelForm автоматически создает форму на основе полей модели' },
+                'f3': { correct: '1', explanation: 'csrf_token в шаблоне защищает форму от подделки межсайтовых запросов' }
+            },
+            'templatesQuiz': {
+                't1': { correct: '1', explanation: 'extends позволяет наследовать содержимое из базового шаблона' },
+                't2': { correct: '1', explanation: 'Переменные передаются в шаблон через словарь context в представлении' }
+            }
+        };
+        
+        checkQuiz(form.id, answers[form.id]);
+    });
+    
+    form.appendChild(button);
+});
+</script>
+{% endblock %} 

@@ -180,3 +180,6 @@ class FavoritePostsView(LoginRequiredMixin, ListView):
         if self.request.user.is_authenticated:
             context['favorite_posts'] = self.request.user.favorite_posts.values_list('id', flat=True)
         return context
+
+def tutorial_view(request):
+    return render(request, 'blog/tutorial.html')
